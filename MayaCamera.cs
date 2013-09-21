@@ -3,9 +3,9 @@ using System.Collections;
 
 public class MayaCamera : MonoBehaviour {
 
-	public float dollySpeed;
-	public float tumbleSpeed;
-	public float trackSpeed;
+	public float dollySpeed		= 1f;
+	public float tumbleSpeed	= 1f;
+	public float trackSpeed		= 1f;
 
 	Vector3 prevMousePosition;
 	Vector3 prevMouseSpeed;
@@ -41,7 +41,9 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(1))
 		{
 			// 右クリック, dolly
-			Camera.main.transform.localPosition += mouseSpeed * dollySpeed;
+			var dollied_local = Camera.main.transform.localPosition;
+			dollied_local.z -= mouseSpeed.y * dollySpeed;
+			Camera.main.transform.localPosition = dollied_local;
 		}
 	}
 
@@ -50,6 +52,7 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(2))
 		{
 			// 中央クリック, track
+			Camera.main.transform.localPosition -= mouseSpeed;
 		}
 	}
 
