@@ -7,7 +7,7 @@ public class MayaCamera : MonoBehaviour {
 
 	public float dollySpeed		= 0.1f;
 	public float tumbleSpeed	= 1f;
-	public float trackSpeed		= 1f;
+	public float trackSpeed		= 0.1f;
 
 	Vector3 prevMousePosition;
 	Vector3 prevMouseSpeed;
@@ -61,8 +61,9 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(2))
 		{
 			// ’†‰›ƒNƒŠƒbƒN, track
-			var speed_vec = mouseSpeed * trackSpeed;
-			Camera.main.transform.localPosition -= speed_vec;
+			var rotate = Camera.main.transform.rotation;
+			var speed_vec = rotate * (mouseSpeed * trackSpeed);
+			Camera.main.gameObject.transform.localPosition -= speed_vec;
 			lookAtPosition -= speed_vec;
 		}
 	}
