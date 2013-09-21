@@ -5,7 +5,7 @@ public class MayaCamera : MonoBehaviour {
 
 	Vector3 lookAtPosition;
 
-	public float dollySpeed		= 1f;
+	public float dollySpeed		= 0.1f;
 	public float tumbleSpeed	= 1f;
 	public float trackSpeed		= 1f;
 
@@ -29,6 +29,7 @@ public class MayaCamera : MonoBehaviour {
 		Tumble();
 		Dolly();
 		Track();
+		Camera.main.transform.LookAt(lookAtPosition);
 	}
 
 	void Tumble()
@@ -36,17 +37,11 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(0))
 		{
 			// 左クリック, tumble
-			Vector3 inverse_vector = Camera.main.transform.position - lookAtPosition;
-			float length = inverse_vector.magnitude;
-			inverse_vector.Normalize();
-
-			Vector3 rotated_vector = 
-				Quaternion.Euler(
-				mouseSpeed.x * tumbleSpeed, 
-				mouseSpeed.y * tumbleSpeed, 0) * inverse_vector;
-
-			Camera.main.transform.position = rotated_vector + lookAtPosition;
-			Camera.main.transform.LookAt(lookAtPosition);
+			Vector3 inverse_vector = lookAtPosition - Camera.main.transform.position;
+			Quaternion rotation = Quaternion.LookRotation(inverse_vector);
+			Camera.main.transform.rotation = rotation;
+			Camera.main.transform.RotateAround(lookAtPosition, Vector3.up,					 mouseSpeed.x);
+			Camera.main.transform.RotateAround(lookAtPosition, Camera.main.transform.right, -mouseSpeed.y);
 		}
 	}
 
@@ -56,7 +51,7 @@ public class MayaCamera : MonoBehaviour {
 		{
 			// 右クリック, dolly
 			var dollied_local = Camera.main.transform.localPosition;
-			dollied_local.z -= mouseSpeed.y * dollySpeed;
+			dollied_local.z -= (mouseSpeed.x + mouseSpeed.y) * dollySpeed;
 			Camera.main.transform.localPosition = dollied_local;
 		}
 	}
@@ -66,8 +61,9 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(2))
 		{
 			// 中央クリック, track
-			Camera.main.transform.localPosition -= mouseSpeed;
-			lookAtPosition -= mouseSpeed;
+			var speed_vec = mouseSpeed * trackSpeed;
+			Camera.main.transform.localPosition -= speed_vec;
+			lookAtPosition -= speed_vec;
 		}
 	}
 
