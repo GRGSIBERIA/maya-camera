@@ -22,17 +22,34 @@ public class MayaCamera : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		CalculateMousePhisics();
+		Tumble();
+		Dolly();
+		Track();
+	}
+
+	void Tumble()
+	{
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(0))
 		{
-			// 左クリック
+			// 左クリック, tumble
+			
 		}
+	}
+
+	void Dolly()
+	{
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(1))
 		{
-			// 右クリック
+			// 右クリック, dolly
+			Camera.main.transform.localPosition += mouseSpeed * dollySpeed;
 		}
+	}
+
+	void Track()
+	{
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(2))
 		{
-			// 中央クリック
+			// 中央クリック, track
 		}
 	}
 
