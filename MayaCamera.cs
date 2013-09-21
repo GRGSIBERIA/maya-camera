@@ -5,14 +5,17 @@ public class MayaCamera : MonoBehaviour {
 
 	Vector3 lookAtPosition;
 
-	public float dollySpeed		= 0.1f;
 	public float tumbleSpeed	= 0.1f;
-	public float trackSpeed		= 0.1f;
+	public float dollySpeed		= 0.1f;
+	public float trackSpeed		= 0.02f;
+	public Vector3 mouseSpeed;
+	public Vector3 mouseAccel;
 
 	Vector3 prevMousePosition;
 	Vector3 prevMouseSpeed;
-	public Vector3 mouseSpeed;
-	public Vector3 mouseAccel;
+	Vector3 cameraToLookAtVector;
+	float log10VectorLength;
+	
 
 	// Use this for initialization
 	void Start () {
@@ -26,6 +29,7 @@ public class MayaCamera : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		CalculateMousePhisics();
+		CalculateCameraPhisics();
 		Tumble();
 		Dolly();
 		Track();
@@ -37,8 +41,7 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(0))
 		{
 			// 左クリック, tumble
-			Vector3 inverse_vector = lookAtPosition - Camera.main.transform.position;
-			Quaternion rotation = Quaternion.LookRotation(inverse_vector);
+			Quaternion rotation = Quaternion.LookRotation(cameraToLookAtVector);
 			Camera.main.transform.rotation = rotation;
 			Camera.main.transform.RotateAround(lookAtPosition, Vector3.up,					 mouseSpeed.x);
 			Camera.main.transform.RotateAround(lookAtPosition, Camera.main.transform.right, -mouseSpeed.y);
@@ -50,10 +53,9 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(1))
 		{
 			// 右クリック, dolly
-			float log10 = Mathf.Log10((Camera.main.transform.position - lookAtPosition).sqrMagnitude);
-			if (log10 < 0.001f) log10 = 0.001f;
+			
 			float move_power = 
-				((mouseSpeed.x + mouseSpeed.y) * 0.5f) * dollySpeed * log10;
+				((mouseSpeed.x + mouseSpeed.y) * 0.5f) * dollySpeed * log10VectorLength;
 			Camera.main.transform.Translate(0, 0, move_power);
 		}
 	}
@@ -65,9 +67,16 @@ public class MayaCamera : MonoBehaviour {
 			// 中央クリック, track
 			var rotate = Camera.main.transform.rotation;
 			var speed_vec = rotate * (mouseSpeed * trackSpeed);
-			Camera.main.transform.localPosition -= speed_vec;
-			lookAtPosition -= speed_vec;
+			Camera.main.transform.localPosition -= speed_vec * log10VectorLength;
+			lookAtPosition -= speed_vec * log10VectorLength;
 		}
+	}
+
+	void CalculateCameraPhisics()
+	{
+		cameraToLookAtVector = lookAtPosition - Camera.main.transform.position;
+		log10VectorLength = Mathf.Log10(cameraToLookAtVector.sqrMagnitude);
+		if (log10VectorLength < 0.001f) log10VectorLength = 0.001f;
 	}
 
 	void CalculateMousePhisics()
