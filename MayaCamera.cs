@@ -3,6 +3,8 @@ using System.Collections;
 
 public class MayaCamera : MonoBehaviour {
 
+	Vector3 lookAtPosition;
+
 	public float dollySpeed		= 1f;
 	public float tumbleSpeed	= 1f;
 	public float trackSpeed		= 1f;
@@ -14,9 +16,11 @@ public class MayaCamera : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		lookAtPosition = Vector3.zero;
 		prevMousePosition = Input.mousePosition;
 		mouseSpeed = Vector3.zero;
 		mouseAccel = Vector3.zero;
+		Camera.main.transform.LookAt(lookAtPosition);
 	}
 	
 	// Update is called once per frame
@@ -32,7 +36,17 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(0))
 		{
 			// 左クリック, tumble
-			
+			Vector3 inverse_vector = Camera.main.transform.position - lookAtPosition;
+			float length = inverse_vector.magnitude;
+			inverse_vector.Normalize();
+
+			Vector3 rotated_vector = 
+				Quaternion.Euler(
+				mouseSpeed.x * tumbleSpeed, 
+				mouseSpeed.y * tumbleSpeed, 0) * inverse_vector;
+
+			Camera.main.transform.position = rotated_vector + lookAtPosition;
+			Camera.main.transform.LookAt(lookAtPosition);
 		}
 	}
 
@@ -53,6 +67,7 @@ public class MayaCamera : MonoBehaviour {
 		{
 			// 中央クリック, track
 			Camera.main.transform.localPosition -= mouseSpeed;
+			lookAtPosition -= mouseSpeed;
 		}
 	}
 
