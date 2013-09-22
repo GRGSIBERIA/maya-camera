@@ -40,7 +40,7 @@ public class MayaCamera : MonoBehaviour {
 	{
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(0))
 		{
-			// ¶ƒNƒŠƒbƒN, tumble
+			// å·¦ã‚¯ãƒªãƒƒã‚¯, tumble
 			Quaternion rotation = Quaternion.LookRotation(cameraToLookAtVector);
 			Camera.main.transform.rotation = rotation;
 			Camera.main.transform.RotateAround(lookAtPosition, Vector3.up,					 mouseSpeed.x);
@@ -52,7 +52,7 @@ public class MayaCamera : MonoBehaviour {
 	{
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(1))
 		{
-			// ‰EƒNƒŠƒbƒN, dolly
+			// å³ã‚¯ãƒªãƒƒã‚¯, dolly
 			
 			float move_power = 
 				((mouseSpeed.x + mouseSpeed.y) * 0.5f) * dollySpeed * log10VectorLength;
@@ -64,7 +64,7 @@ public class MayaCamera : MonoBehaviour {
 	{
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(2))
 		{
-			// ’†‰›ƒNƒŠƒbƒN, track
+			// ä¸­å¤®ã‚¯ãƒªãƒƒã‚¯, track
 			var rotate = Camera.main.transform.rotation;
 			var speed_vec = rotate * (mouseSpeed * trackSpeed);
 			Camera.main.transform.localPosition -= speed_vec * log10VectorLength;
@@ -81,7 +81,7 @@ public class MayaCamera : MonoBehaviour {
 
 	void CalculateMousePhisics()
 	{
-		// ƒ}ƒEƒX‚Ì‘¬“x‰Á‘¬“x“™‚ğŒvZ
+		// ãƒã‚¦ã‚¹ã®é€Ÿåº¦åŠ é€Ÿåº¦ç­‰ã‚’è¨ˆç®—
 		mouseSpeed = Input.mousePosition - prevMousePosition;
 		mouseAccel = mouseSpeed - prevMouseSpeed;
 		prevMouseSpeed = mouseSpeed;
