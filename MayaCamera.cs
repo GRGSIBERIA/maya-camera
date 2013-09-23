@@ -4,7 +4,9 @@ using System.Collections;
 public class MayaCamera : MonoBehaviour {
 
 	Vector3 lookAtPosition;
-	
+
+	public Vector3 defaultLookAtPosition = Vector3.zero;
+
 	public float tumbleSpeed	= 20f;
 	public float dollySpeed		= 0.2f;
 	public float trackSpeed		= 0.2f;
@@ -20,7 +22,7 @@ public class MayaCamera : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		lookAtPosition = Vector3.zero;
+		lookAtPosition = defaultLookAtPosition;
 		mousePosition = Input.mousePosition;
 		prevMousePosition = mousePosition;
 		mouseSpeed = Vector3.zero;
