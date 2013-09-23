@@ -1,16 +1,17 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class MayaCamera : MonoBehaviour {
 
 	Vector3 lookAtPosition;
 
-	public float tumbleSpeed	= 0.1f;
-	public float dollySpeed		= 0.1f;
-	public float trackSpeed		= 0.02f;
+	public float tumbleSpeed	= 1f;
+	public float dollySpeed		= 1f;
+	public float trackSpeed		= 0.2f;
 	public Vector3 mouseSpeed;
 	public Vector3 mouseAccel;
 
+	Vector3 mousePosition;
 	Vector3 prevMousePosition;
 	Vector3 prevMouseSpeed;
 	Vector3 cameraToLookAtVector;
@@ -20,7 +21,8 @@ public class MayaCamera : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		lookAtPosition = Vector3.zero;
-		prevMousePosition = Input.mousePosition;
+		mousePosition = Input.mousePosition;
+		prevMousePosition = mousePosition;
 		mouseSpeed = Vector3.zero;
 		mouseAccel = Vector3.zero;
 		Camera.main.transform.LookAt(lookAtPosition);
@@ -43,8 +45,8 @@ public class MayaCamera : MonoBehaviour {
 			// 左クリック, tumble
 			Quaternion rotation = Quaternion.LookRotation(cameraToLookAtVector);
 			Camera.main.transform.rotation = rotation;
-			Camera.main.transform.RotateAround(lookAtPosition, Vector3.up,					 mouseSpeed.x);
-			Camera.main.transform.RotateAround(lookAtPosition, Camera.main.transform.right, -mouseSpeed.y);
+			Camera.main.transform.RotateAround(lookAtPosition, Vector3.up,					 mouseSpeed.x * tumbleSpeed);
+			Camera.main.transform.RotateAround(lookAtPosition, Camera.main.transform.right, -mouseSpeed.y * tumbleSpeed);
 		}
 	}
 
@@ -53,9 +55,8 @@ public class MayaCamera : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(1))
 		{
 			// 右クリック, dolly
-			
 			float move_power = 
-				((mouseSpeed.x + mouseSpeed.y) * 0.5f) * dollySpeed * log10VectorLength;
+				(mouseSpeed.x - mouseSpeed.y) * dollySpeed * log10VectorLength;
 			Camera.main.transform.Translate(0, 0, move_power);
 		}
 	}
@@ -75,16 +76,16 @@ public class MayaCamera : MonoBehaviour {
 	void CalculateCameraPhisics()
 	{
 		cameraToLookAtVector = lookAtPosition - Camera.main.transform.position;
-		log10VectorLength = Mathf.Log10(cameraToLookAtVector.sqrMagnitude);
-		if (log10VectorLength < 0.001f) log10VectorLength = 0.001f;
+		log10VectorLength = Mathf.Log10(cameraToLookAtVector.sqrMagnitude) + 1f;
 	}
 
 	void CalculateMousePhisics()
 	{
 		// マウスの速度加速度等を計算
-		mouseSpeed = Input.mousePosition - prevMousePosition;
-		mouseAccel = mouseSpeed - prevMouseSpeed;
-		prevMouseSpeed = mouseSpeed;
-		prevMousePosition = Input.mousePosition;
+		prevMousePosition	= mousePosition;
+		mousePosition		= Input.mousePosition;
+		prevMouseSpeed		= mouseSpeed;
+		mouseSpeed = (mousePosition - prevMousePosition) * Time.deltaTime;
+		mouseAccel = (mouseSpeed    - prevMouseSpeed)    * Time.deltaTime;
 	}
 }
