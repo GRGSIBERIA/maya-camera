@@ -11,6 +11,8 @@ public class MayaCamera : MonoBehaviour {
 	public float dollySpeed		= 0.2f;
 	public float trackSpeed		= 0.2f;
 
+	public float transitTime = 1.0f;
+
 	public Vector3 mouseSpeed		{ get; private set; }
 	public Vector3 mouseAccel		{ get; private set; }
 	public Vector3 mousePosition	{ get; private set; }
@@ -91,5 +93,23 @@ public class MayaCamera : MonoBehaviour {
 		prevMouseSpeed		= mouseSpeed;
 		mouseSpeed = (mousePosition - prevMousePosition) * Time.deltaTime;
 		mouseAccel = (mouseSpeed    - prevMouseSpeed)    * Time.deltaTime;
+	}
+
+	
+
+	TransitStatus lookatTransitStatus = new TransitStatus();
+	TransitStatus gotoTransitStatus = new TransitStatus();
+
+	bool LookAtHere(Vector3 lookat)
+	{
+		return lookatTransitStatus.Transit(ref lookat, ref lookAtPosition, transitTime, out lookAtPosition);
+	}
+
+	bool GotoHere(Vector3 gotoHere)
+	{
+		var position = transform.position;
+		bool flag = gotoTransitStatus.Transit(ref gotoHere, ref position, transitTime, out position);
+		transform.position = position;
+		return flag;
 	}
 }
