@@ -22,7 +22,7 @@ public class TransitStatus
 
 	Vector3 Transit()
 	{
-		float value = Mathf.Sin((time / timeTo) * (Mathf.PI * 2));
+		float value = Mathf.Sin((time / timeTo) * (Mathf.PI * 0.5f));
 		Vector3 here = Vector3.Slerp(from, to, value);
 		time += UnityEngine.Time.deltaTime;
 		return here;
@@ -37,7 +37,7 @@ public class TransitStatus
 
 	public void Transit(ref Vector3 position)
 	{
-		if (!flag)
+		if (flag)
 		{
 			position = Transit();
 			flag = JudgeTiming();

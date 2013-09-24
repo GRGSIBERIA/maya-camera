@@ -102,14 +102,18 @@ public class MayaCamera : MonoBehaviour {
 
 	void MovementLookat()
 	{
-		lookatTransitStatus.Transit(ref lookAtPosition);
+		if (lookatTransitStatus != null)
+			lookatTransitStatus.Transit(ref lookAtPosition);
 	}
 
 	void MovementGoto()
 	{
-		var position = transform.position;
-		gotoTransitStatus.Transit(ref position);
-		transform.position = position;
+		if (gotoTransitStatus != null)
+		{
+			var position = transform.position;
+			gotoTransitStatus.Transit(ref position);
+			transform.position = position;
+		}
 	}
 
 	public void LookAtHere(Vector3 lookat, float timeto)
@@ -117,9 +121,19 @@ public class MayaCamera : MonoBehaviour {
 		lookatTransitStatus = new TransitStatus(ref lookat, ref lookAtPosition, timeto);
 	}
 
+	public void LookAtHere(Vector3 lookat)
+	{
+		LookAtHere(lookat, transitTime);
+	}
+
 	public void GotoHere(Vector3 gotoHere, float timeto)
 	{
 		var position = transform.position;
-		lookatTransitStatus = new TransitStatus(ref gotoHere, ref position, timeto);
+		gotoTransitStatus = new TransitStatus(ref gotoHere, ref position, timeto);
+	}
+
+	public void GotoHere(Vector3 gotoHere)
+	{
+		GotoHere(gotoHere, transitTime);
 	}
 }
