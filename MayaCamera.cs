@@ -100,12 +100,12 @@ public class MayaCamera : MonoBehaviour {
 	TransitStatus lookatTransitStatus = new TransitStatus();
 	TransitStatus gotoTransitStatus = new TransitStatus();
 
-	bool LookAtHere(Vector3 lookat)
+	public bool LookAtHere(Vector3 lookat)
 	{
 		return lookatTransitStatus.Transit(ref lookat, ref lookAtPosition, transitTime, out lookAtPosition);
 	}
 
-	bool GotoHere(Vector3 gotoHere)
+	public bool GotoHere(Vector3 gotoHere)
 	{
 		var position = transform.position;
 		bool flag = gotoTransitStatus.Transit(ref gotoHere, ref position, transitTime, out position);
