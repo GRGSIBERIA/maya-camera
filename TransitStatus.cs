@@ -11,25 +11,13 @@ public class TransitStatus
 	float time;
 	public float Time { get { return time; } }
 
-	public TransitStatus()
+	public TransitStatus(ref Vector3 to, ref Vector3 from, float timeTo)
 	{
-		flag = false;
-		to = Vector3.zero;
-		from = Vector3.zero;
-		timeTo = 0f;
+		flag = true;
+		this.to = to;
+		this.from = from;
 		time = 0f;
-	}
-
-	void Init(ref Vector3 to, ref Vector3 from, float timeTo)
-	{
-		if (!flag)
-		{
-			flag = true;
-			this.to = to;
-			this.from = from;
-			time = 0f;
-			this.timeTo = timeTo;
-		}
+		this.timeTo = timeTo;
 	}
 
 	Vector3 Transit()
@@ -40,17 +28,19 @@ public class TransitStatus
 		return here;
 	}
 
-	bool JudgeFlag()
+	bool JudgeTiming()
 	{
 		if (time >= timeTo)
-			flag = false;
-		return flag;
+			return false;
+		return true;
 	}
 
-	public bool Transit(ref Vector3 to, ref Vector3 from, float timeTo, out Vector3 position)
+	public void Transit(ref Vector3 position)
 	{
-		Init(ref to, ref from, timeTo);
-		position = Transit();
-		return JudgeFlag();
+		if (!flag)
+		{
+			position = Transit();
+			flag = JudgeTiming();
+		}
 	}
 }

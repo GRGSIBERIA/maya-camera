@@ -22,6 +22,9 @@ public class MayaCamera : MonoBehaviour {
 	Vector3 cameraToLookAtVector;
 	float log10VectorLength;
 
+	TransitStatus lookatTransitStatus;
+	TransitStatus gotoTransitStatus;
+
 	// Use this for initialization
 	void Start () {
 		lookAtPosition = defaultLookAtPosition;
@@ -39,6 +42,8 @@ public class MayaCamera : MonoBehaviour {
 		Tumble();
 		Dolly();
 		Track();
+		MovementGoto();
+		MovementLookat();
 		gameObject.transform.LookAt(lookAtPosition);
 	}
 
@@ -95,21 +100,26 @@ public class MayaCamera : MonoBehaviour {
 		mouseAccel = (mouseSpeed    - prevMouseSpeed)    * Time.deltaTime;
 	}
 
-	
-
-	TransitStatus lookatTransitStatus = new TransitStatus();
-	TransitStatus gotoTransitStatus = new TransitStatus();
-
-	public bool LookAtHere(Vector3 lookat)
+	void MovementLookat()
 	{
-		return lookatTransitStatus.Transit(ref lookat, ref lookAtPosition, transitTime, out lookAtPosition);
+		lookatTransitStatus.Transit(ref lookAtPosition);
 	}
 
-	public bool GotoHere(Vector3 gotoHere)
+	void MovementGoto()
 	{
 		var position = transform.position;
-		bool flag = gotoTransitStatus.Transit(ref gotoHere, ref position, transitTime, out position);
+		gotoTransitStatus.Transit(ref position);
 		transform.position = position;
-		return flag;
+	}
+
+	public void LookAtHere(Vector3 lookat, float timeto)
+	{
+		lookatTransitStatus = new TransitStatus(ref lookat, ref lookAtPosition, timeto);
+	}
+
+	public void GotoHere(Vector3 gotoHere, float timeto)
+	{
+		var position = transform.position;
+		lookatTransitStatus = new TransitStatus(ref gotoHere, ref position, timeto);
 	}
 }
