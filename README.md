@@ -43,7 +43,7 @@ MayaCameraクラスにはいくつか公開している変数・プロパティ�
 どの距離でも一定の速さを保ちたい場合は，CalculateCameraPhisics関数内のコードを以下のように書き換えてください．
 
 ```MayaCamera.cs
-log10VectorLength = Mathf.Log10(cameraToLookAtVector.sqrMagnitude) + 1f;
+//log10VectorLength = Mathf.Log10(cameraToLookAtVector.sqrMagnitude) + 1f;
 log10VectorLength = 1f
 ```
 
