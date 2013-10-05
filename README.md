@@ -41,6 +41,18 @@ MayaCameraクラスにはいくつか公開している変数・プロパティ�
 ## 関数
 MayaCameraクラスにはいくつか公開されている関数があります．
 
+### InvokeDolly() : void
+右クリックでカメラの遠近を行う操作と同じです．
+判定処理を飛ばして実行します．
+
+### InvokeTumble() : void
+中ボタンクリックでカメラの平行移動を行う操作と同じです．
+判定処理を飛ばして実行します．
+
+### InvokeTrack() : void
+左クリックでカメラの被写体を中心とした回転を行う操作と同じです．
+判定処理を飛ばして実行します．
+
 ### LookAtHere(Vector3 lookat, float timeTo) : void
 LookAtHere関数を呼び出すと，カメラの注視点をlookatまで移動します．
 移動はMayaCameraクラスのUpdateで行われるため，呼び出しは1度だけで結構です．
