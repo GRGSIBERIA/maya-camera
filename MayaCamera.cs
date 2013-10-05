@@ -39,49 +39,64 @@ public class MayaCamera : MonoBehaviour {
 	void Update () {
 		CalculateMousePhisics();
 		CalculateCameraPhisics();
-		Tumble();
-		Dolly();
-		Track();
+		ClickedTumble();
+		ClickedDolly();
+		ClickedTrack();
 		MovementGoto();
 		MovementLookat();
 		gameObject.transform.LookAt(lookAtPosition);
 	}
 
-	void Tumble()
+	void ClickedTumble()
 	{
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(0))
 		{
-			// 左クリック, tumble
-			Quaternion rotation = Quaternion.LookRotation(cameraToLookAtVector);
-			gameObject.transform.rotation = rotation;
-			gameObject.transform.RotateAround(lookAtPosition, Vector3.up,					 mouseSpeed.x * tumbleSpeed);
-			gameObject.transform.RotateAround(lookAtPosition, gameObject.transform.right, -mouseSpeed.y * tumbleSpeed);
+			InvokeTumble();
 		}
 	}
 
-	void Dolly()
+	public void InvokeTumble()
+	{
+		// 左クリック, tumble
+		Quaternion rotation = Quaternion.LookRotation(cameraToLookAtVector);
+		gameObject.transform.rotation = rotation;
+		gameObject.transform.RotateAround(lookAtPosition, Vector3.up, mouseSpeed.x * tumbleSpeed);
+		gameObject.transform.RotateAround(lookAtPosition, gameObject.transform.right, -mouseSpeed.y * tumbleSpeed);
+	}
+
+	void ClickedDolly()
 	{
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(1))
 		{
-			// 右クリック, dolly
-			float move_power = 
-				(mouseSpeed.x - mouseSpeed.y) * dollySpeed * log10VectorLength;
-			gameObject.transform.Translate(0, 0, move_power);
+			InvokeDolly();
 		}
 	}
 
-	void Track()
+	public void InvokeDolly()
+	{
+		// 右クリック, dolly
+		float move_power =
+			(mouseSpeed.x - mouseSpeed.y) * dollySpeed * log10VectorLength;
+		gameObject.transform.Translate(0, 0, move_power);
+	}
+
+	void ClickedTrack()
 	{
 		if (
 			(Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(2)) ||
 			(Input.GetKey(KeyCode.LeftAlt) && Input.GetMouseButton(0) && Input.GetMouseButton(1)))
 		{
-			// 中央クリック, track
-			var rotate = gameObject.transform.rotation;
-			var speed_vec = rotate * (mouseSpeed * trackSpeed);
-			gameObject.transform.localPosition -= speed_vec * log10VectorLength;
-			lookAtPosition -= speed_vec * log10VectorLength;
+			InvokeTrack();
 		}
+	}
+
+	public void InvokeTrack()
+	{
+		// 中央クリック, track
+		var rotate = gameObject.transform.rotation;
+		var speed_vec = rotate * (mouseSpeed * trackSpeed);
+		gameObject.transform.localPosition -= speed_vec * log10VectorLength;
+		lookAtPosition -= speed_vec * log10VectorLength;
 	}
 
 	void CalculateCameraPhisics()
