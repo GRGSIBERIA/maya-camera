@@ -21,18 +21,20 @@ public class MayaCamera : MonoBehaviour {
 	Vector3 prevMouseSpeed;
 	Vector3 cameraToLookAtVector;
 	float log10VectorLength;
+	public float Log10LookAtLength { get { return log10VectorLength; } }
 
 	TransitStatus lookatTransitStatus;
 	TransitStatus gotoTransitStatus;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		lookAtPosition = defaultLookAtPosition;
 		mousePosition = Input.mousePosition;
 		prevMousePosition = mousePosition;
 		mouseSpeed = Vector3.zero;
 		mouseAccel = Vector3.zero;
 		gameObject.transform.LookAt(lookAtPosition);
+		CalculateCameraPhisics();
 	}
 	
 	// Update is called once per frame
