@@ -5,6 +5,7 @@ public class MayaCamera : MonoBehaviour {
 
 	Vector3 lookAtPosition;
 
+    public GameObject defaultLootAtObject = null;
 	public Vector3 defaultLookAtPosition = Vector3.zero;
 
 	public float tumbleSpeed	= 20f;
@@ -28,7 +29,10 @@ public class MayaCamera : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		lookAtPosition = defaultLookAtPosition;
+        if (defaultLootAtObject != null)
+            lookAtPosition = defaultLootAtObject.transform.position;
+        else
+    		lookAtPosition = defaultLookAtPosition;
 		mousePosition = Input.mousePosition;
 		prevMousePosition = mousePosition;
 		mouseSpeed = Vector3.zero;
